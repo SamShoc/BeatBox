@@ -13,10 +13,20 @@ import android.view.ViewGroup;
 import com.ctech.shockman.beatbox.databinding.FragmentBeatBoxBinding;
 import com.ctech.shockman.beatbox.databinding.ListItemSoundBinding;
 
+import java.util.List;
+
 public class BeatBoxFragment extends Fragment {
+
+    private BeatBox mBeatBox;
 
     public static BeatBoxFragment newInstance() {
         return new BeatBoxFragment();
+    }
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mBeatBox = new BeatBox(getActivity());
     }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,7 +35,7 @@ public class BeatBoxFragment extends Fragment {
                 inflater, R.layout.fragment_beat_box, container, false);
 
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        binding.recyclerView.setAdapter(new SoundAdapter());
+        binding.recyclerView.setAdapter(new SoundAdapter(mBeatBox.getSoundList()));
 
         return binding.getRoot();
     }
@@ -40,6 +50,12 @@ public class BeatBoxFragment extends Fragment {
     }
 
     private class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
+
+        private List<Sound> mSoundList;
+
+        public SoundAdapter(List<Sound> sounds) {
+            mSoundList = sounds;
+        }
 
         @NonNull
         @Override
@@ -57,7 +73,8 @@ public class BeatBoxFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mSoundList.size();
         }
     }
+
 }
